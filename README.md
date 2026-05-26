@@ -136,4 +136,4 @@ uvicorn src.api:app --reload --host 0.0.0.0 --port 8000
 Todos os prints obrigatórios (fluxo n8n ativo, chat de Telegram com respostas, notificações no Discord e traces no LangSmith) estão organizados e disponíveis no diretório:
 📂 [prints_entrega/](file:///c:/Users/Brayan/Desktop/trabalho_culinaria/assistente-culinaria/prints_entrega/)
 
-Conforme orientação, foi acertado com o professor, conforme apresentação de todo o processo, sendo não preciso entregar o video mostrando todo o processo, pois já aprensei pra ele pessoalmente.
+Conforme orientação, foi acertado com o professor, conforme apresentação de todo o processo, sendo não preciso entregar o video mostrando todo o processo, pois já apresentei pra ele pessoalmente.

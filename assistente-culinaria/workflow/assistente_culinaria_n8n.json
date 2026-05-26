@@ -1,0 +1,219 @@
+{
+  "name": "Assistente de Culinaria - Telegram & Discord",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger-node-id",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8000/perguntar",
+        "sendBody": true,
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "pergunta",
+              "value": "={{ $json.message.text }}"
+            },
+            {
+              "name": "usuario_id",
+              "value": "={{ $json.message.from.username || $json.message.from.first_name }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "chamar-agente-node-id",
+      "name": "Chamar Agente",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=👨‍🍳 **Chef Assistente:**\n\n{{ $json.resposta }}\n\n📖 *Fontes:* {{ Array.isArray($json.fontes) && $json.fontes.length > 0 ? $json.fontes.join(', ') : 'Nenhuma' }}\n⚠️ *Urgência:* {{ $json.urgencia }}",
+        "additionalFields": {}
+      },
+      "id": "responder-telegram-node-id",
+      "name": "Responder no Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-urgencia-alta-culinaria",
+              "leftValue": "={{ $('Chamar Agente').item.json.urgencia }}",
+              "rightValue": "alta",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "urgencia-alta-node-id",
+      "name": "IF Urgência Alta",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        760,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/SEU_ID/TOKEN_ALERTAS",
+        "sendBody": true,
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "=🚨 **DÚVIDA CULINÁRIA URGENTE!**\n\n👤 **Usuário:** @{{ $('Telegram Trigger').item.json.message.from.username || $('Telegram Trigger').item.json.message.from.first_name }}\n❓ **Dúvida:** {{ $('Telegram Trigger').item.json.message.text }}\n\n👨‍🍳 **Resposta:** {{ $('Chamar Agente').item.json.resposta }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "discord-alertas-urgentes-node-id",
+      "name": "Discord #alertas-urgentes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/SEU_ID/TOKEN_NORMAIS",
+        "sendBody": true,
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "=📝 **Dúvida Culinária Comum**\n\n👤 **Usuário:** @{{ $('Telegram Trigger').item.json.message.from.username || $('Telegram Trigger').item.json.message.from.first_name }}\n❓ **Dúvida:** {{ $('Telegram Trigger').item.json.message.text }}\n\n👨‍🍳 **Resposta:** {{ $('Chamar Agente').item.json.resposta }}\n📖 **Fontes:** {{ Array.isArray($('Chamar Agente').item.json.fontes) && $('Chamar Agente').item.json.fontes.length > 0 ? $('Chamar Agente').item.json.fontes.join(', ') : 'Nenhuma' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "discord-duvidas-normais-node-id",
+      "name": "Discord #duvidas-normais",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        420
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Chamar Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chamar Agente": {
+      "main": [
+        [
+          {
+            "node": "Responder no Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder no Telegram": {
+      "main": [
+        [
+          {
+            "node": "IF Urgência Alta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Urgência Alta": {
+      "main": [
+        [
+          {
+            "node": "Discord #alertas-urgentes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Discord #duvidas-normais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

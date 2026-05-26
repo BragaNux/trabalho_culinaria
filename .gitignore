@@ -1,0 +1,13 @@
+# Ignore settings for workspace root
+assistente-culinaria/.env
+assistente-culinaria/.venv/
+assistente-culinaria/chroma_db/
+assistente-culinaria/registros.db
+assistente-culinaria/__pycache__/
+assistente-culinaria/**/*.pyc
+.env
+.venv/
+chroma_db/
+registros.db
+__pycache__/
+*.pyc

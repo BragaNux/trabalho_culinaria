@@ -1,0 +1,22 @@
+[
+  {
+    "pergunta": "Qual é a receita e o tempo de preparo do Pão de Queijo Mineiro?",
+    "resposta_esperada": "O Pão de Queijo Mineiro tradicional leva polvilho azedo, sal, óleo de soja, leite integral, água, ovos e queijo meia cura ralado. O tempo de preparo é de 45 minutos."
+  },
+  {
+    "pergunta": "Como posso salvar um arroz que queimou no fundo da panela?",
+    "resposta_esperada": "Para salvar o arroz queimado, desligue o fogo imediatamente, coloque a base da panela em água fria para parar o cozimento, e coloque uma fatia de pão de forma branco por cima do arroz por 5 a 10 minutos para absorver o cheiro. Depois, separe o arroz limpo da parte queimada sem raspar o fundo."
+  },
+  {
+    "pergunta": "O que fazer em caso de queimadura leve na cozinha?",
+    "resposta_esperada": "Em caso de queimadura leve de primeiro grau, coloque imediatamente a área sob água fria corrente por 10 a 15 minutos para resfriar a pele. Não aplique manteiga, pasta de dente, óleo ou gelo, pois retêm calor. Cubra suavemente com gaze limpa e estéril."
+  },
+  {
+    "pergunta": "Quais são os ingredientes necessários para fazer um Brigadeiro Gourmet?",
+    "resposta_esperada": "Os ingredientes para o Brigadeiro Gourmet tradicional são: 1 lata de leite condensado (395g), 1 colher de sopa de manteiga sem sal (15g), 100g de chocolate em pó 50% cacau, 100ml de creme de leite de caixinha (opcional) e chocolate granulado de boa qualidade."
+  },
+  {
+    "pergunta": "O que posso usar para substituir uma xícara de creme de leite fresco?",
+    "resposta_esperada": "Para substituir 1 xícara de creme de leite fresco em receitas culinárias de molhos e sopas, você pode misturar 3/4 de xícara de leite integral com 1/4 de xícara (57g) de manteiga derretida."
+  }
+]
